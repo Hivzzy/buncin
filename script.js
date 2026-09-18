@@ -468,8 +468,8 @@ function updateSliderDesc(val) {
     state.loveDescription = "Sampai ke Pluto & balik lagi! 🚀💕";
     meterDescBadge.textContent = `"${state.loveDescription}"`;
   } else {
-    meterValText.textContent = `∞% (MAX!)`;
-    state.loveDescription = "TAK TERHINGGA SAMPAI AKHIR WAKTU!! 💥❤️‍🔥";
+    meterValText.textContent = `1000% (MAX!)`;
+    state.loveDescription = "TAK TERHINGGA SAMPAI AKHIR WAKTU!! 🚀💖";
     meterDescBadge.textContent = `"${state.loveDescription}"`;
   }
 }
@@ -577,8 +577,13 @@ document.getElementById('btnSendPap').addEventListener('click', () => {
     phone = '62' + phone.substring(1);
   }
   
+  const nameTrimmed = (state.hisName || 'Sayang').trim();
+  const greeting = nameTrimmed.toLowerCase().includes('sayang')
+    ? `Halo ${nameTrimmed}! 🥰💖`
+    : `Halo ${nameTrimmed} sayang! 🥰💖`;
+
   const textMessage = 
-`Halo ${state.hisName} sayang! 🥰💖
+`${greeting}
 
 Aku baru aja beresin game Quest Cinta bareng Mimi si Kucing Pixel! 🌸🐱
 
@@ -588,7 +593,13 @@ Hasil Jawabanku:
 
 Sesuai quest terakhir yang disuruh Mimi, ini PAP spesial paling manis buat kamu... 📸💕👇`;
 
-  const waUrl = `https://wa.me/${phone}?text=${encodeURIComponent(textMessage)}`;
+  // Auto copy ke clipboard agar pengguna juga bisa langsung paste jika browser bermasalah
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(textMessage).catch(() => {});
+  }
+
+  // Gunakan endpoint resmi api.whatsapp.com langsung tanpa 302 redirect wa.me yang merusak UTF-8 emoji
+  const waUrl = `https://api.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(textMessage)}`;
   
   // Buka WhatsApp di tab baru
   window.open(waUrl, '_blank');
