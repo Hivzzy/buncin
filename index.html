@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>💖 Quest Cinta: Spesial Untuk Pacarku Tercantik 🌸🐱</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="apple-touch-icon" href="favicon.svg" />
+  <meta name="description" content="Petualangan cinta retro 8-bit RPG spesial buat kamu bidadari tercantik! 💖🐱🌹" />
+  <meta name="theme-color" content="#ff69b4" />
+  <meta property="og:title" content="💖 Quest Cinta: Spesial Untukmu 🌸" />
+  <meta property="og:description" content="Ada misi cinta rahasia yang harus kamu selesaikan sekarang juga! Buka yuk... 💕🐱" />
+  <meta property="og:type" content="website" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- Canvas untuk efek partikel pixel heart, mawar, dan bintang -->
+  <canvas id="particleCanvas"></canvas>
+
+  <!-- Sound Toggle & Settings Top Bar -->
+  <div class="top-nav">
+    <button id="soundToggle" class="pixel-btn-icon" title="Toggle Suara">
+      <span id="soundIcon">🔊</span>
+    </button>
+    <button id="configToggle" class="pixel-btn-icon" title="Pengaturan Kontak WA">
+      <span>⚙️</span>
+    </button>
+  </div>
+
+  <!-- Main Game Container -->
+  <main class="game-container">
+    
+    <!-- Top Game Banner / Title & Logo -->
+    <header class="game-header">
+      <div class="logo-badge-icon">
+        <svg class="pixel-mini-logo" viewBox="0 0 16 16" width="22" height="22">
+          <rect x="3" y="2" width="4" height="1" fill="#ffffff" />
+          <rect x="9" y="2" width="4" height="1" fill="#ffffff" />
+          <rect x="2" y="3" width="12" height="6" fill="#ffffff" />
+          <rect x="4" y="9" width="8" height="4" fill="#ffffff" />
+          <rect x="6" y="13" width="4" height="2" fill="#ffffff" />
+          <rect x="5" y="5" width="2" height="2" fill="#ff1493" />
+          <rect x="9" y="5" width="2" height="2" fill="#ff1493" />
+        </svg>
+      </div>
+      <div class="header-titles">
+        <span class="game-subtitle">★ FOR MY SWEETHEART ★</span>
+        <h1 class="game-title">QUEST CINTA RPG</h1>
+      </div>
+      <div class="logo-badge-icon">
+        <span class="pixel-sparkle-anim">✨</span>
+      </div>
+    </header>
+
+    <!-- Character Stage / Showcase -->
+    <section class="character-stage">
+      <div class="sprite-halo"></div>
+      <!-- SVG Pixel Character Mimi -->
+      <div id="characterSprite" class="character-box normal">
+        <!-- Pixel Cat SVG rendered dynamically / CSS animated -->
+        <svg id="mimiSvg" class="pixel-cat-svg" viewBox="0 0 32 32">
+          <!-- Body Base -->
+          <rect x="8" y="14" width="16" height="14" fill="#ffd1dc" />
+          <rect x="6" y="16" width="20" height="11" fill="#ffd1dc" />
+          <!-- Outline -->
+          <path d="M8 12 h16 v2 h-16 z M6 14 h2 v2 h-2 z M24 14 h2 v2 h-2 z M4 16 h2 v11 h-2 z M26 16 h2 v11 h-2 z M6 27 h2 v2 h-2 z M24 27 h2 v2 h-2 z M8 29 h16 v2 h-16 z" fill="#4a154b" />
+          <!-- Cat Ears (Left & Right) -->
+          <polygon points="6,6 12,6 12,12 6,12" fill="#4a154b" />
+          <polygon points="7,7 11,7 11,11 7,11" fill="#ff9ebb" />
+          <polygon points="20,6 26,6 26,12 20,12" fill="#4a154b" />
+          <polygon points="21,7 25,7 25,11 21,11" fill="#ff9ebb" />
+          <!-- Cheeks (Blush) -->
+          <rect id="blushL" x="7" y="21" width="4" height="2" fill="#ff6b8b" />
+          <rect id="blushR" x="21" y="21" width="4" height="2" fill="#ff6b8b" />
+          <!-- Eyes Group -->
+          <g id="catEyes">
+            <!-- Normal Eyes -->
+            <rect class="eye-normal" x="10" y="17" width="3" height="4" fill="#4a154b" />
+            <rect class="eye-normal" x="19" y="17" width="3" height="4" fill="#4a154b" />
+            <!-- Eye Highlights -->
+            <rect class="eye-normal" x="10" y="17" width="1" height="2" fill="#ffffff" />
+            <rect class="eye-normal" x="19" y="17" width="1" height="2" fill="#ffffff" />
+            <!-- Crying Eyes (Hidden by default) -->
+            <path class="eye-crying" d="M9 19 h5 v2 h-5 z M18 19 h5 v2 h-5 z" fill="#4a154b" />
+            <!-- Big Pixel Tears -->
+            <g class="tears-group">
+              <rect x="10" y="22" width="2" height="6" fill="#00d2ff" />
+              <rect x="20" y="22" width="2" height="6" fill="#00d2ff" />
+              <rect x="9" y="25" width="2" height="3" fill="#80e5ff" />
+              <rect x="21" y="25" width="2" height="3" fill="#80e5ff" />
+            </g>
+            <!-- Happy Eyes (Hearts or ^ ^) -->
+            <g class="eye-happy">
+              <path d="M9 18 h2 v-2 h2 v2 h-2 v1 h-2 z" fill="#ff1493" />
+              <path d="M19 18 h2 v-2 h2 v2 h-2 v1 h-2 z" fill="#ff1493" />
+              <rect x="10" y="19" width="3" height="2" fill="#ff1493" />
+              <rect x="19" y="19" width="3" height="2" fill="#ff1493" />
+            </g>
+          </g>
+          <!-- Nose -->
+          <polygon points="15,20 17,20 16,21" fill="#e03168" />
+          <!-- Mouth -->
+          <g id="catMouth">
+            <path class="mouth-normal" d="M14 22 h1 v1 h-1 z M17 22 h1 v1 h-1 z M15 23 h2 v1 h-2 z" fill="#4a154b" />
+            <rect class="mouth-open" x="14" y="22" width="4" height="3" fill="#ff3366" />
+            <path class="mouth-sad" d="M14 23 h4 v1 h-4 z M13 24 h1 v1 h-1 z M18 24 h1 v1 h-1 z" fill="#4a154b" />
+          </g>
+          <!-- Paws -->
+          <rect x="9" y="26" width="4" height="3" fill="#ffffff" />
+          <rect x="19" y="26" width="4" height="3" fill="#ffffff" />
+          <!-- Paws Border -->
+          <path d="M9 29 h4 v1 h-4 z M19 29 h4 v1 h-4 z" fill="#4a154b" />
+          <!-- Accessory / Bow -->
+          <g id="accessoryBow">
+            <rect x="14" y="12" width="4" height="3" fill="#ff1493" />
+            <polygon points="11,11 14,13 11,15" fill="#ff69b4" />
+            <polygon points="21,11 18,13 21,15" fill="#ff69b4" />
+          </g>
+        </svg>
+      </div>
+
+      <!-- Character Status Tag -->
+      <div class="character-tag">
+        <span class="status-dot"></span>
+        <span id="characterMood">Mimi The Love Cat 💕</span>
+      </div>
+    </section>
+
+    <!-- RPG Dialogue Window -->
+    <section class="rpg-dialogue-window">
+      <!-- Name Plate -->
+      <div class="dialogue-nameplate">
+        <span id="speakerName">Mimi 🐾</span>
+      </div>
+
+      <!-- Dialogue Text Container -->
+      <div class="dialogue-content">
+        <p id="typewriterText" class="dialogue-text"></p>
+        <span id="blinkingCursor" class="blinking-arrow">▼</span>
+      </div>
+
+      <!-- Action Area / Interactive Screen per Step -->
+      <div id="interactiveArea" class="interactive-area">
+        
+        <!-- STEP 0: START SCREEN -->
+        <div id="step0" class="step-view active">
+          <button id="btnStartGame" class="pixel-btn primary pulse">
+            ▶ MULAI PETUALANGAN! 💖
+          </button>
+        </div>
+
+        <!-- STEP 1: NAMA KAMU -->
+        <div id="step1" class="step-view">
+          <div class="pixel-input-group">
+            <label class="pixel-label" for="inputHerName">Nama Cantik Kamu:</label>
+            <input type="text" id="inputHerName" class="pixel-input" placeholder="Ketik nama kamu di sini..." maxlength="25" autocomplete="off" />
+          </div>
+          <button id="btnStep1Next" class="pixel-btn primary">
+            Lanjut > ✨
+          </button>
+        </div>
+
+        <!-- STEP 2: NAMA PACAR -->
+        <div id="step2" class="step-view">
+          <div class="pixel-input-group">
+            <label class="pixel-label" for="inputHisName">Nama Pacar Kamu Yang Beruntung:</label>
+            <input type="text" id="inputHisName" class="pixel-input" placeholder="Ketik nama pacar kamu..." maxlength="25" autocomplete="off" />
+          </div>
+          <button id="btnStep2Next" class="pixel-btn primary">
+            Lanjut > 💖
+          </button>
+        </div>
+
+        <!-- STEP 3: APAKAH KAMU SANGAT MENCINTAINYA? -->
+        <div id="step3" class="step-view">
+          <div class="love-decision-container">
+            <button id="btnYesLove" class="pixel-btn primary btn-huge-yes">
+              IYA BANGET! 💖🥰
+            </button>
+            <button id="btnNoLove" class="pixel-btn danger btn-shrink-no">
+              Nggak... 💔
+            </button>
+          </div>
+          <div id="rejectionFeedback" class="rejection-feedback"></div>
+        </div>
+
+        <!-- STEP 4: SEBERAPA BESAR CINTAMU? -->
+        <div id="step4" class="step-view">
+          <div class="love-meter-wrapper">
+            <div class="meter-label-row">
+              <span class="meter-title">LOVE STATS:</span>
+              <span id="meterValText" class="meter-val">100%</span>
+            </div>
+            <div class="slider-container">
+              <input type="range" id="loveSlider" min="100" max="1000" step="50" value="100" class="pixel-slider" />
+            </div>
+            <div class="meter-fun-badge" id="meterDescBadge">
+              "Banyaaak banget!" 💖
+            </div>
+            <button id="btnMaxLove" class="pixel-btn secondary mini-btn">
+              ⚡ MAKSIMALKAN KE LEVEL ∞! 🚀
+            </button>
+          </div>
+          <button id="btnStep4Next" class="pixel-btn primary">
+            Kunci Jawaban Cintaku! 🔒💕
+          </button>
+        </div>
+
+        <!-- STEP 5: SELESAI / KIRIM PAP -->
+        <div id="step5" class="step-view">
+          <div class="victory-card">
+            <div class="trophy-row">
+              <span class="pixel-icon">🏆</span>
+              <span class="pixel-badge">LEVEL UP: MAX LOVE!</span>
+              <span class="pixel-icon">🌹</span>
+            </div>
+            
+            <div class="summary-box">
+              <p class="summary-text" id="finalLoveSummary">
+                Kamu & Dia resmi pasangan paling serasi di dunia! 💕
+              </p>
+            </div>
+
+            <div class="pap-action-box">
+              <div class="camera-sparkle">📸 ✨</div>
+              <p class="pap-quest-title">QUEST TERAKHIR:</p>
+              <p class="pap-quest-desc" id="papQuestDesc">
+                Kirimkan Pap paling manis yang disukai pacarmu sekarang juga!
+              </p>
+              
+              <button id="btnSendPap" class="pixel-btn success pulse-slow">
+                💌 KIRIM PAP KE WA SEKARANG! 📸💕
+              </button>
+
+              <button id="btnRestartGame" class="pixel-btn secondary small-btn">
+                🔄 Mainkan Lagi Dari Awal
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Bottom Retro Frame Bar -->
+    <footer class="game-footer">
+      <div class="pixel-decorations">
+        <span>🌹</span>
+        <span>🐾</span>
+        <span>💖</span>
+        <span>🐾</span>
+        <span>🌹</span>
+      </div>
+    </footer>
+
+  </main>
+
+  <!-- Modal Konfigurasi WhatsApp (Bisa diubah oleh User) -->
+  <div id="configModal" class="modal-backdrop">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h2 class="modal-title">⚙️ Pengaturan Kontak WA</h2>
+        <button id="btnCloseModal" class="pixel-btn-close">✖</button>
+      </div>
+      <div class="modal-body">
+        <label class="pixel-label" for="cfgWaNumber">Nomor WhatsApp Kamu (format 628...):</label>
+        <input type="tel" id="cfgWaNumber" class="pixel-input" placeholder="Contoh: 6281234567890" />
+        
+        <label class="pixel-label" for="cfgDefaultBoy">Default Nama Kamu:</label>
+        <input type="text" id="cfgDefaultBoy" class="pixel-input" placeholder="Nama kamu" />
+
+        <p class="cfg-hint">
+          *Data ini tersimpan di browser Anda agar link WA otomatis mengarah ke kontak Anda!
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button id="btnSaveConfig" class="pixel-btn primary">Simpan Pengaturan 💾</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
