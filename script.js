@@ -217,9 +217,12 @@ function setCharacterMood(mood, textLabel) {
 function typeDialogue(text, onComplete) {
   if (state.typingTimeout) {
     clearTimeout(state.typingTimeout);
+    state.typingTimeout = null;
   }
   
   state.isTyping = true;
+  state.currentText = text;
+  state.onCompleteTyping = onComplete;
   typewriterEl.textContent = "";
   cursorEl.style.display = "none";
   setCharacterMood('talking', 'Mimi sedang bicara... 💬');
@@ -234,35 +237,50 @@ function typeDialogue(text, onComplete) {
         playTypeBlip();
       }
       charIndex++;
-      state.typingTimeout = setTimeout(typeChar, 35);
+      state.typingTimeout = setTimeout(typeChar, 22);
     } else {
-      state.isTyping = false;
-      cursorEl.style.display = "inline-block";
-      // Kembalikan mood ke normal jika bukan sedang crying/happy
-      if (charBox.classList.contains('talking')) {
-        setCharacterMood('normal', 'Mimi The Love Cat 💕');
-      }
-      if (onComplete) onComplete();
+      finishTyping();
     }
   }
   typeChar();
 }
 
-// Klik dialogue box untuk mempercepat teks
-document.querySelector('.dialogue-content').addEventListener('click', () => {
-  if (state.isTyping) {
-    // Biarkan selesai otomatis lebih cepat
+function finishTyping() {
+  if (state.typingTimeout) {
     clearTimeout(state.typingTimeout);
     state.typingTimeout = null;
-    const currentStepConfig = STEPS[state.currentStep];
-    if (currentStepConfig) {
-      typewriterEl.textContent = currentStepConfig.getText();
-      state.isTyping = false;
-      cursorEl.style.display = "inline-block";
-      if (charBox.classList.contains('talking')) {
-        setCharacterMood('normal', 'Mimi The Love Cat 💕');
-      }
-    }
+  }
+  if (state.currentText) {
+    typewriterEl.textContent = state.currentText;
+  }
+  state.isTyping = false;
+  cursorEl.style.display = "inline-block";
+  if (charBox.classList.contains('talking')) {
+    setCharacterMood('normal', 'Mimi The Love Cat 💕');
+  }
+  if (state.onCompleteTyping) {
+    const cb = state.onCompleteTyping;
+    state.onCompleteTyping = null;
+    cb();
+  }
+}
+
+function skipTyping() {
+  if (state.isTyping) {
+    finishTyping();
+  }
+}
+
+// Klik / Tap di mana saja pada dialog box atau stage untuk langsung menyelesaikan teks
+document.querySelector('.rpg-dialogue-window').addEventListener('click', (e) => {
+  if (state.isTyping && e.target.tagName !== 'INPUT' && e.target.tagName !== 'BUTTON') {
+    skipTyping();
+  }
+});
+
+document.querySelector('.character-stage').addEventListener('click', () => {
+  if (state.isTyping) {
+    skipTyping();
   }
 });
 
@@ -577,21 +595,31 @@ document.getElementById('btnSendPap').addEventListener('click', () => {
     phone = '62' + phone.substring(1);
   }
   
-  const nameTrimmed = (state.hisName || 'Sayang').trim();
-  const greeting = nameTrimmed.toLowerCase().includes('sayang')
-    ? `Halo ${nameTrimmed}! 🥰💖`
-    : `Halo ${nameTrimmed} sayang! 🥰💖`;
+  const herName = (state.herName || 'Pacarmu').trim();
+  const hisName = (state.hisName || state.config.defaultHisName || 'Sayang').trim();
+
+  const greeting = hisName.toLowerCase().includes('sayang')
+    ? `Halo ${hisName}! 🥰💖`
+    : `Halo ${hisName} sayang! 🥰💖`;
 
   const textMessage = 
-`${greeting}
+`💌 *LAPORAN RESMI QUEST CINTA RPG* 🐾
+━━━━━━━━━━━━━━━━━━━━
+• *DARI:* ${herName} 💕
+• *UNTUK:* ${hisName} 💖
+━━━━━━━━━━━━━━━━━━━━
 
-Aku baru aja beresin game Quest Cinta bareng Mimi si Kucing Pixel! 🌸🐱
+${greeting}
+Aku baru aja menyelesaikan game Quest Cinta bareng Mimi si Kucing Pixel! 🌸🐱
 
-Hasil Jawabanku:
-✨ Aku SANGAT mencintai kamu! 💖
-✨ Skor Cinta: ${meterValText.textContent} (${state.loveDescription})
+Berikut rangkuman jawaban cintaku:
+✨ *Nama Cantik:* ${herName} 🥰
+✨ *Pacar Tersayang:* ${hisName} 💖
+✨ *Apakah Aku Sangat Mencintaimu?:* IYA BANGET! 💖
+✨ *Level & Skor Cinta:* ${meterValText.textContent} (${state.loveDescription})
 
-Sesuai quest terakhir yang disuruh Mimi, ini PAP spesial paling manis buat kamu... 📸💕👇`;
+📸 *STATUS QUEST TERAKHIR:*
+Sesuai perintah Mimi, ini PAP paling manis yang disukai ${hisName} spesial buat kamu... 💕👇`;
 
   // Auto copy ke clipboard agar pengguna juga bisa langsung paste jika browser bermasalah
   if (navigator.clipboard && navigator.clipboard.writeText) {
